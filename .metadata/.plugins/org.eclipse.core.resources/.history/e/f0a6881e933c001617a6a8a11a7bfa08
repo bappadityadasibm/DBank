@@ -1,0 +1,50 @@
+package org.retailer.shoplocator.backend;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+import org.retailer.helper.Location;
+import org.retailer.helper.LocationHelper;
+import org.retailer.shoplocator.entities.ShopLocation;
+import org.retailer.shoplocator.service.ShopLocationService;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+@RestController
+public class ShopLocationController {
+
+	
+	@Autowired
+	private ShopLocationService shopLocationService;
+
+
+	/*@RequestMapping(value = "/{id}")
+	public ShopLocation getPricing(@PathVariable int id) {
+		ShopLocation shop = shopCreationService.findById(id);
+		return shop;
+	}*/
+
+	@RequestMapping(value = "/locateshop/{latitude}/{longitude}")
+	public ShopLocation locateShop(@PathVariable double latitude, @PathVariable double longitude) throws Exception
+	{
+		return shopLocationService.findNearestShop(latitude, longitude);
+	}
+	
+	@RequestMapping(value = "/saveshoplocation/{shopAddressNumber}/{shopAddressPostcode}/{shopId}")
+	public ShopLocation locateShop(@PathVariable String shopAddressNumber, @PathVariable String shopAddressPostcode,@PathVariable double shopId) throws Exception
+	{
+		return shopLocationService.createShopLocation(shopAddressNumber, shopAddressPostcode, shopId);
+	}
+}

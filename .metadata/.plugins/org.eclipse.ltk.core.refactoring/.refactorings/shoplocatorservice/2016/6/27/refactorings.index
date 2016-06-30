@@ -1,0 +1,54 @@
+1467015651716	Rename package 'org.sapient.catalogue'
+1467015688249	Rename type 'ProductService'
+1467015699602	Rename type 'ProductServiceImpl'
+1467015942182	Move compilation units
+1467044291417	Rename package 'org.retailer.shopmanagement'
+1467044402568	Rename package 'org.retailer.shopmanagement.backend'
+1467044419868	Rename package 'org.retailer.shopmanagement.dbconfiguration'
+1467044441758	Rename package 'org.retailer.shopmanagement.entities'
+1467044455079	Rename package 'org.retailer.shopmanagement.repositories'
+1467044470071	Rename package 'org.retailer.shopmanagement.service'
+1467048333170	Delete elements
+1467048487404	Rename compilation unit 'ShopLocatorController.java'
+1467048580925	Rename type 'Shop'
+1467049098523	Delete element
+1467049101708	Delete element
+1467049178208	Delete element
+1467049181961	Delete element
+1467049254237	Rename compilation unit 'ShopRepository.java'
+1467050796587	Rename type 'ShopAddress'
+1467050816602	Rename type 'ShopAddressRepository'
+1467050844859	Rename type 'ShopLocatorService'
+1467050858354	Rename type 'ShopLocatorServiceImpl'
+1467099430794	Rename package 'org.retailer.shopmanagement.vo'
+1467099452154	Rename type 'ShopVO'
+1467103981862	Copy package
+1467111688605	Copy package
+1467111725286	Copy package
+1467115358282	Rename type 'APIGatewayControllerTest'
+1467115813138	Rename type 'ShopLocatorServiceTest'
+1467117244069	Copy package
+1467132835038	Rename package 'org.retailer.shoplocator.backend'
+1467132889746	Rename package 'org.retailer.shoplocator.vo'
+1467132906163	Rename type 'ShopLocationVO'
+1467132936229	Rename package 'org.retailer.shoplocator.entities'
+1467132970762	Rename package 'org.retailer.shoplocator.repositories'
+1467132991965	Rename type 'ShopLocationRepository'
+1467133022492	Rename package 'org.retailer.shoplocator.service'
+1467133065809	Move compilation unit
+1467133079189	Delete element
+1467133337925	Copy package
+1467133356480	Delete element
+1467133363678	Delete element
+1467133373208	Delete element
+1467133386346	Delete element
+1467133401317	Delete element
+1467133461786	Rename package 'org.retailer.shoplocator.domain.service'
+1467133505929	Rename package 'org.retailer.shoplocator.domain.service2'
+1467134346206	Copy package
+1467134358438	Delete element
+1467134364752	Delete element
+1467134398486	Rename package 'org.retailer.shoplocator.controller'
+1467134448885	Rename package 'org.retailer.shoplocator.controller2'
+1467134466541	Copy compilation unit
+1467134477639	Rename type 'ShopLocationITO'

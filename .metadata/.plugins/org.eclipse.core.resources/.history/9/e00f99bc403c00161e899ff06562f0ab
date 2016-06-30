@@ -1,0 +1,14 @@
+package org.retailer.shoplocator.service;
+
+import java.util.List;
+
+import org.retailer.shoplocator.entities.Product;
+
+public interface ShopLocatorService {
+	public Product findById(long id);
+	public List<Product> findByType(String type);
+	public Product findByName(String name);
+	public void saveProduct(Product product);
+	public void deleteProduct(long id);
+	
+}

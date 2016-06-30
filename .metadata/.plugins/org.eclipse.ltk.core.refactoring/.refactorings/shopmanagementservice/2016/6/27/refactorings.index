@@ -1,0 +1,38 @@
+1467014849862	Delete element
+1467015161962	Rename package 'org.sapient.pricing'
+1467015460015	Rename type 'PricingService'
+1467015487735	Rename type 'PricingServiceImpl'
+1467015509029	Rename type 'PricingRepository'
+1467015520776	Rename type 'Pricing'
+1467015566457	Rename type 'PricingController'
+1467025959757	Rename compilation unit 'package-info.java'
+1467025984670	Delete element
+1467045048912	Rename compilation unit 'DistanceLocator.java'
+1467048319322	Copy compilation unit
+1467049209883	Copy compilation units
+1467049230559	Delete elements
+1467049922425	Delete element
+1467049933123	Copy compilation units
+1467049945400	Delete element
+1467051748099	Rename type 'ShopCreationService'
+1467051762432	Rename type 'ShopCreationServiceImpl'
+1467098550893	Copy compilation unit
+1467098589240	Rename type 'Shop'
+1467099413834	Copy package
+1467103955007	Copy package
+1467111714106	Rename package 'org.retailer.shoplocator.mvcconfiguration'
+1467117276366	Rename type 'ShopLocationControllerTest'
+1467132025446	Rename package 'org.retailer.shopmanagement.entities'
+1467132095373	Rename package 'org.retailer.shopmanagement.repositories'
+1467132155932	Rename type 'ShopRepository'
+1467132263323	Rename package 'org.retailer.shopmanagement.service'
+1467132311753	Move compilation unit
+1467132362723	Move compilation unit
+1467132385824	Move compilation unit
+1467132500432	Rename package 'org.retailer.shopmanagement.vo'
+1467132517917	Rename type 'ShopVO'
+1467132545374	Rename package 'org.retailer.shopmanagement.backend'
+1467134887141	Rename package 'org.retailer.shopmanagement.controller'
+1467134916921	Rename package 'org.retailer.shopmanagement.controller2'
+1467134958251	Copy compilation unit
+1467134968001	Rename type 'ShopITO'

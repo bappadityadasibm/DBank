@@ -1,0 +1,87 @@
+package org.retailer.gateway.service;
+
+import org.retailer.gateway.to.ShopTO;
+import org.retailer.shoplocator.vo.ShopLocationVO;
+import org.retailer.shopmanagement.vo.ShopVO;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import java.util.Map;
+import java.util.HashMap;
+import org.json.simple.parser.ParseException;
+
+@Service
+@Transactional
+public class GatewayServiceImpl implements GatewayService{
+	
+	
+	public ShopTO saveShop(String shopName, String  shopAddressNumber, String shopAddressPostcode) throws ParseException
+	{
+		final String shopManagementUri = "http://localhost:8083/add";
+	     
+	    RestTemplate restTemplate = new RestTemplate();
+	    ShopVO shopVO = new ShopVO();
+	    shopVO.setName(shopName);
+	    shopVO.setShopAddressNumber(shopAddressNumber);
+	    shopVO.setShopAddressPostcode(shopAddressPostcode);
+	    ShopVO shopAdded = restTemplate.postForObject(shopManagementUri, shopVO, ShopVO.class);
+	    Long shopId = shopAdded.getId();
+	    System.out.println("fetched shop id="+shopId);
+	    
+	    final String shopLocationUri = "http://localhost:8082/addShopLocation/{shopAddressNumber}/{shopAddressPostcode}/{shopId}";
+
+	    Map<String, String> shopLocationServiceParams = new HashMap<String, String>();
+	    shopLocationServiceParams.put("shopAddressNumber", shopAddressNumber);
+	    shopLocationServiceParams.put("shopAddressPostcode",shopAddressPostcode);
+	    shopLocationServiceParams.put("shopId",String.valueOf(shopId));
+	     
+	    ShopLocationVO shopLocationVO = new ShopLocationVO();
+	    ShopLocationVO shopLocationAdded = restTemplate.postForObject(shopLocationUri, shopLocationVO, ShopLocationVO.class, shopLocationServiceParams);
+	    double  longitude = shopLocationAdded.getLongitude();
+	    double latitude = shopLocationAdded.getLatitude();
+	    
+	    ShopTO shopTO = new ShopTO();
+	    shopTO.setId(shopId);
+	    shopTO.setName(shopName);
+	    shopTO.setShopAddressNumber(shopAddressNumber);
+	    shopTO.setShopAddressPostcode(shopAddressPostcode);
+	    shopTO.setLatitude(latitude);
+	    shopTO.setLongitude(longitude);
+	    
+		return shopTO;
+	}
+	
+	public ShopTO findNearestShopLocation(double latitude,double longitude)
+	{
+		final String shopLocationUri = "http://localhost:8082/nearestShop/{latitude}/{longitude}";
+		RestTemplate restTemplate = new RestTemplate();
+
+	    Map<String, Double> shopLocationServiceParams = new HashMap<String, Double>();
+	    shopLocationServiceParams.put("latitude", latitude);
+	    shopLocationServiceParams.put("longitude",longitude);
+	     
+	    ShopLocationVO shopLocationVO = restTemplate.getForObject(shopLocationUri, ShopLocationVO.class, shopLocationServiceParams);
+	    
+	    System.out.println("Fetched Nearest Shop id="+shopLocationVO.getShopId());
+	    
+	    final String shopServiceUri = "http://localhost:8083/find/{id}";
+	    Map<String, String> shopServiceParams = new HashMap<String, String>();
+	    shopServiceParams.put("id", String.valueOf(shopLocationVO.getShopId()));
+	    
+	    ShopVO shopVO = restTemplate.getForObject(shopServiceUri, ShopVO.class, shopServiceParams);
+	    
+	    ShopTO shopTO = new ShopTO();
+	    shopTO.setId(shopVO.getId());
+	    shopTO.setLatitude(shopLocationVO.getLatitude());
+	    shopTO.setLongitude(shopLocationVO.getLongitude());
+	    shopTO.setName(shopVO.getName());
+	    shopTO.setShopAddressNumber(shopVO.getShopAddressNumber());
+	    shopTO.setShopAddressPostcode(shopVO.getShopAddressPostcode());
+	    
+	    return shopTO;
+	   
+	}
+	
+}

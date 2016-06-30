@@ -1,0 +1,5 @@
+package org.retailer.test;
+
+public class APIGatewayControllerTest {
+
+}

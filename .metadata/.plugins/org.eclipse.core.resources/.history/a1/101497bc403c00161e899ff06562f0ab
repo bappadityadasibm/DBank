@@ -1,0 +1,63 @@
+package org.retailer.shoplocator.backend;
+
+import org.retailer.shoplocator.entities.Product;
+import org.retailer.shoplocator.repositories.ProductRepository;
+import org.retailer.shoplocator.service.ShopLocatorService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import java.util.ArrayList;
+import java.util.List;
+
+
+@RestController
+@RequestMapping(value = "/products")
+public class ProductCatalogueController {
+
+	
+	@Autowired
+    private ShopLocatorService shopLocatorService;
+
+
+	@RequestMapping(value = "/{id}")
+	public Product getProduct(@PathVariable int id) {
+		Product product = shopLocatorService.findById(id);
+		return product;
+	}
+
+	
+	@RequestMapping(value = "/add/{name}/{description}/{type}")
+	public Product addProduct(@PathVariable String name, @PathVariable String description,
+			@PathVariable String type) {
+		Product product = new Product();
+		product.setName(name);
+		product.setDescription(description);
+		product.setType(type);
+		shopLocatorService.saveProduct(product);
+		return product;
+	}
+	@RequestMapping(value = "/delete/{id}")
+	public void deleteProduct(@PathVariable long id) {
+		Product product = new Product();
+		product.setId(id);
+		shopLocatorService.deleteProduct(id);
+	}
+	
+	@RequestMapping(value = "/search/type/{type}")
+	public List<Product> getProductByType(@PathVariable String type) {
+		List<Product> productList = shopLocatorService.findByType(type);
+		return productList;
+	}
+	
+	@RequestMapping(value = "/search/name/{name}")
+	public Product getProductByName(@PathVariable String name) {
+		Product product = shopLocatorService.findByName(name);
+		return product;
+	}
+}

@@ -1,0 +1,22 @@
+1467092402011	Rename package 'org.retailer.shopmanagement'
+1467092417451	Delete element
+1467092423772	Delete element
+1467092468571	Rename type 'ShopController'
+1467092581428	Rename type 'ShopService'
+1467092595563	Rename type 'ShopServiceImpl'
+1467093009207	Delete element
+1467111753338	Rename package 'org.retailer.shoplocator.mvcconfiguration'
+1467114418859	Copy package
+1467114426684	Delete element
+1467134047655	Rename package 'org.retailer.gateway.backend'
+1467134104630	Rename package 'org.retailer.gateway.service'
+1467134173509	Move compilation unit
+1467134187347	Rename package 'org.retailer.gateway.service2'
+1467135249583	Move compilation unit
+1467135309440	Rename type 'ShopTO'
+1467135318163	Move compilation unit
+1467135327003	Delete elements
+1467135340209	Rename type 'ShopLocationVO'
+1467135352397	Rename type 'ShopVO'
+1467138724288	Copy compilation unit
+1467139063096	Copy compilation unit

@@ -1,0 +1,11 @@
+package org.sapient.catalogue.repositories;
+
+import java.util.List;
+
+import org.sapient.catalogue.entities.Product;
+import org.springframework.data.repository.CrudRepository;
+
+public interface ProductRepository extends CrudRepository<Product, Long>{
+	public List<Product> findByType(String type);
+	public List<Product> findByName(String name);
+}

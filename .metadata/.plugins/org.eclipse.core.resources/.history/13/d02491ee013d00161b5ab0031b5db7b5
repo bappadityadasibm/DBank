@@ -1,0 +1,71 @@
+package org.retailer.shopmanagement.backend;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.retailer.shopmanagement.entities.Shop;
+import org.retailer.shopmanagement.service.ShopService;
+import org.retailer.shopmanagement.vo.ShopVO;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+@RestController
+public class ShopController {
+
+	
+	@Autowired
+    private ShopService shopService;
+
+	@RequestMapping(value = "/find/{id}")
+	public Shop getShop(@PathVariable long id) {
+		Shop shop = shopService.findById(id);
+		return shop;
+	}
+
+	
+	@RequestMapping(method=RequestMethod.POST, value = "/add")
+	public Shop addShop(@RequestBody ShopVO shopVO) throws Exception{
+		System.out.println("HERE!!!!!!");	
+		Shop shop = shopService.saveShop(shopVO.getName(),shopVO.getShopAddressNumber(),shopVO.getShopAddressPostcode());
+		return shop;
+	}
+	
+	
+	/*@RequestMapping(value = "/delete/{id}")
+	public void deletePricing(@PathVariable long id) {
+		Shop shop = new Shop();
+		shop.setId(id);
+		shopService.deletePricing(id);
+	}*/
+	
+	/*@RequestMapping(value = "/search/productname/{productname}")
+	public Shop getByProductName(@PathVariable String productname) throws Exception{
+		final String uri = "http://localhost:8082/products/search/name/{name}";
+	     
+	    Map<String, String> params = new HashMap<String, String>();
+	    params.put("name", productname);
+	     
+	    RestTemplate restTemplate = new RestTemplate();
+	    String resultFromProductMicroService = restTemplate.getForObject(uri, String.class, params);
+	    JSONObject json = (JSONObject)new JSONParser().parse(resultFromProductMicroService);
+	    Long productId = (Long)json.get("id");
+	    System.out.println("fetched product id="+productId);
+
+	    Shop shop = shopService.findByProductId(productId);
+		return shop;
+	}*/
+}

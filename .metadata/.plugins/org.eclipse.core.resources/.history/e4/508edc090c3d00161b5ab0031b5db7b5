@@ -1,0 +1,88 @@
+package org.retailer.shoplocator.service;
+
+import java.util.Iterator;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.retailer.helper.*;
+import org.retailer.shoplocator.entities.ShopLocation;
+import org.retailer.shoplocator.repositories.ShopLocationRepository;
+import org.retailer.shoplocator.vo.ShopLocationVO;
+
+
+@Service
+@Transactional
+public class ShopLocationServiceImpl implements ShopLocationService{
+	
+	@Autowired
+	private ShopLocationRepository shopLocationRepository;
+	
+	public ShopLocationVO findNearestShop(double latitude, double longitude)
+	{
+		double minimumDistance = -1;
+		ShopLocation nearestShopLocation = null;
+		ShopLocationVO nearestShopLocationVO = null;
+		Iterator<ShopLocation> shopAddressIter = shopLocationRepository.findAll().iterator();
+		while(shopAddressIter.hasNext())
+		{
+			System.out.println("HJHJHJ");
+			ShopLocation shopLocation = shopAddressIter.next();
+			double distance = DistanceCalculator.distance(latitude, longitude, shopLocation.getLatitude(), shopLocation.getLongitude());
+			if(distance <=minimumDistance || minimumDistance < 0)
+			{
+				minimumDistance = distance;
+				nearestShopLocation = shopLocation;
+			}
+			
+			
+		}
+		if(nearestShopLocation != null)
+		{
+			System.out.println("nearest shop Id="+nearestShopLocation.getId());
+			nearestShopLocationVO = new ShopLocationVO();
+			nearestShopLocationVO.setId(nearestShopLocation.getId());
+			nearestShopLocationVO.setShopId(nearestShopLocation.getShopId());
+			nearestShopLocationVO.setLatitude(nearestShopLocation.getLatitude());
+			nearestShopLocationVO.setLongitude(nearestShopLocation.getLongitude());
+		}
+		return nearestShopLocationVO;
+	}
+	
+	public ShopLocationVO createShopLocation(String shopAddressNumber,String shopAddressPostcode, long shopId) throws Exception
+	{
+		StringBuilder combinedAddress = new StringBuilder();
+		combinedAddress.append(shopAddressNumber);
+		combinedAddress.append(" ");
+		combinedAddress.append(shopAddressPostcode);
+		Location location = null;
+		try
+		{
+			location = LocationHelper.getLatLongPositions(combinedAddress.toString());
+		}
+		catch(Exception ex)
+		{
+			throw new Exception("Longitude and Latitude not found for the address.");
+		}
+			
+		ShopLocation shopLocation = null;
+		ShopLocationVO shopLocationVO = null;
+		if(location != null)
+		{
+			shopLocation = new ShopLocation();
+			shopLocation.setShopId(shopId);
+			shopLocation.setLatitude(location.getLatitude());
+			shopLocation.setLongitude(location.getLongitude());
+			shopLocationRepository.save(shopLocation);
+			
+			shopLocationVO = new ShopLocationVO();
+			shopLocationVO.setShopId(shopLocation.getShopId());
+			shopLocationVO.setLatitude(shopLocation.getLatitude());
+			shopLocationVO.setLongitude(shopLocation.getLongitude());
+		}
+		
+		return shopLocationVO;
+	}
+	
+}

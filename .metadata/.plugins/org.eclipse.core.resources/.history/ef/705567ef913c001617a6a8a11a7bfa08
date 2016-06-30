@@ -1,0 +1,10 @@
+package org.retailer.shoplocator.repositories;
+
+import java.util.List;
+
+import org.retailer.shoplocator.entities.ShopLocation;
+import org.springframework.data.repository.CrudRepository;
+
+public interface ShopAddressRepository extends CrudRepository<ShopLocation, Long>{
+	
+}

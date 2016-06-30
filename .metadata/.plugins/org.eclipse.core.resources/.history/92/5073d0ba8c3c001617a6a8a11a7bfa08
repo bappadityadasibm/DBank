@@ -1,0 +1,10 @@
+package org.retailer.shoplocator.repositories;
+
+import java.util.List;
+
+import org.retailer.shoplocator.entities.Shop;
+import org.springframework.data.repository.CrudRepository;
+
+public interface ShopRepository extends CrudRepository<Shop, Long>{
+	
+}

@@ -1,0 +1,8 @@
+package org.retailer.shoplocator.service;
+
+import org.retailer.shoplocator.entities.ShopAddress;
+
+public interface ShopLocatorService {
+	public ShopAddress findNearestShop(double latitude, double longitude);
+	public ShopAddress saveShopAddress(String shopAddressNumber,String shopAddressPostcode, long shopId);
+}

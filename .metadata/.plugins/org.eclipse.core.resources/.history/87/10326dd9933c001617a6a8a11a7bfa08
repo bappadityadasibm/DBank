@@ -1,0 +1,26 @@
+package org.retailer.shopmanagement.service;
+
+import org.retailer.shopmanagement.entities.Shop;
+import org.retailer.shopmanagement.repositories.ShopRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@Transactional
+public class ShopCreationServiceImpl implements ShopCreationService{
+	
+	@Autowired
+	private ShopRepository shopRepository;
+	
+	public Shop saveShop(String shopName, String  shopAddressNumber, String shopAddressPostcode)
+	{
+		Shop shop = new Shop();
+		shop.setName(shopName);
+		shop.setShopAddressNumber(shopAddressNumber);
+		shop.setShopAddressPostcode(shopAddressPostcode);	
+		shopRepository.save(shop);
+		return shop;
+	}
+	
+}

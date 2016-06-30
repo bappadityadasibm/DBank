@@ -1,0 +1,5 @@
+package org.retailer.shoplocator.domain.service.impl;
+
+public class ShopLocationServiceImpl {
+
+}

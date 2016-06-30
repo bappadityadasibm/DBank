@@ -1,0 +1,82 @@
+package org.retailer.test;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
+
+import java.net.URL;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.retailer.shopmanagement.Application;
+import org.retailer.shopmanagement.vo.ShopVO;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.IntegrationTest;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.TestRestTemplate;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.web.client.RestTemplate;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = Application.class)
+@WebAppConfiguration
+@IntegrationTest({"server.port=0"})
+public class ShopControllerTest {
+
+    @Value("${local.server.port}")
+    private int port;
+
+	private RestTemplate template;
+
+	@Before
+	public void setUp() throws Exception {
+		
+		template = new TestRestTemplate();
+	}
+
+	@Test
+	public void testAddShop() throws Exception {
+		 URL uri = new URL("http://localhost:" + port + "/add");
+		
+		 ShopVO shopVO = new ShopVO();
+		 shopVO.setName("Bhim Nag");
+		 shopVO.setShopAddressNumber("B B Ganguly Street");
+		 shopVO.setShopAddressPostcode("700012");
+		 ShopVO shopAdded = template.postForObject(uri.toString(), shopVO, ShopVO.class);
+		 
+		 assertThat(shopAdded.getName(),equalTo("Bhim Nag"));
+		 assertThat(shopAdded.getShopAddressNumber(),equalTo("B B Ganguly Street"));
+		 assertThat(shopAdded.getShopAddressPostcode(),equalTo("700012"));
+	}
+	
+	@Test
+	public void testGetShop() throws Exception {
+		 URL uri1 = new URL("http://localhost:" + port + "/add");
+		
+		 ShopVO shopVO1 = new ShopVO();
+		 shopVO1.setName("Popular Sweet");
+		 shopVO1.setShopAddressNumber("kendua main road");
+		 shopVO1.setShopAddressPostcode("700084");
+		 ShopVO shopAdded1 = template.postForObject(uri1.toString(), shopVO1, ShopVO.class);
+		 
+		 URL uri2 = new URL("http://localhost:" + port + "/add");
+			
+		 ShopVO shopVO2 = new ShopVO();
+		 shopVO2.setName("Krishna Sweets");
+		 shopVO2.setShopAddressNumber("Hill Cart Road");
+		 shopVO2.setShopAddressPostcode("734001");
+		 ShopVO shopAdded2 = template.postForObject(uri1.toString(), shopVO2, ShopVO.class);
+	    
+	    
+	  
+	    
+	    URL url = new URL("http://localhost:" + port + "/nearestShop/22.569/88.36");
+	    ShopLocationVO returnedShopLocationVO = template.getForObject(url.toString(), ShopLocationVO.class);
+	    
+	    assertThat(returnedShopLocationVO.getShopId(),equalTo(5L));
+	    
+	    
+	}
+}

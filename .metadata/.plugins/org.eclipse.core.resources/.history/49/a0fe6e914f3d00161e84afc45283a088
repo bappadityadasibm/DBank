@@ -1,0 +1,9 @@
+package org.retailer.shopmanagement.service;
+
+import org.retailer.shopmanagement.vo.ShopVO;
+
+public interface ShopService {
+	public ShopVO saveShop(String shopName, String  shopAddressNumber, String shopAddressPostcode);
+	public ShopVO findById(long id);
+	
+}

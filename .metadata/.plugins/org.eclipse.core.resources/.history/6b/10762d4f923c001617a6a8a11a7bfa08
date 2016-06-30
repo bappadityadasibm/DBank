@@ -1,0 +1,70 @@
+package org.retailer.shoplocator.service;
+
+import java.util.Iterator;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.retailer.helper.*;
+import org.retailer.shoplocator.entities.ShopLocation;
+import org.retailer.shoplocator.repositories.ShopLocationRepository;
+
+
+@Service
+@Transactional
+public class ShopLocationServiceImpl implements ShopLocationService{
+	
+	@Autowired
+	private ShopLocationRepository shopLocationRepository;
+	
+	public ShopLocation findNearestShop(double latitude, double longitude)
+	{
+		double minimumDistance = -1;
+		ShopLocation nearestShop = null;
+		Iterator<ShopLocation> shopAddressIter = shopLocationRepository.findAll().iterator();
+		while(shopAddressIter.hasNext())
+		{
+			System.out.println("HJHJHJ");
+			ShopLocation shopLocation = shopAddressIter.next();
+			double distance = DistanceCalculator.distance(latitude, longitude, shopLocation.getLatitude(), shopLocation.getLongitude());
+			if(distance <=minimumDistance || minimumDistance < 0)
+			{
+				minimumDistance = distance;
+				nearestShop = shopLocation;
+			}
+			
+			
+		}
+		System.out.println("nearest shop Id="+shopAddress.getId());
+		return nearestShop;
+	}
+	
+	public ShopLocation createShopLocation(String shopAddressNumber,String shopAddressPostcode, long shopId)
+	{
+		StringBuilder combinedAddress = new StringBuilder();
+		combinedAddress.append(shopAddressNumber);
+		combinedAddress.append(" ");
+		combinedAddress.append(shopAddressPostcode);
+		Location location = null;
+		try
+		{
+			location = LocationHelper.getLatLongPositions(combinedAddress.toString());
+		}
+		catch(Exception ex)
+		{
+			throw new Exception("Longitude and Latitude not found for the address.");
+		}
+			
+		if(location != null)
+		{
+			ShopLocation shopLocation = new ShopLocation();
+			shopLocation.setShopId(shopId);
+			shopLocation.setLatitude(location.getLatitude());
+			shopLocation.setLongitude(location.getLongitude());
+		}
+		else
+		return null;
+	}
+	
+}

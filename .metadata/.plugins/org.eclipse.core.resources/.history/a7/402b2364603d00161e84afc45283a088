@@ -1,0 +1,71 @@
+package org.retailer.test;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
+
+import java.net.URL;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.retailer.shoplocator.Application;
+import org.retailer.shoplocator.domain.ito.ShopLocationITO;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.IntegrationTest;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.TestRestTemplate;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.web.client.RestTemplate;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = Application.class)
+@WebAppConfiguration
+@IntegrationTest({"server.port=0"})
+public class ShopLocationControllerTest {
+
+    @Value("${local.server.port}")
+    private int port;
+
+	private RestTemplate template;
+
+	@Before
+	public void setUp() throws Exception {
+		
+		template = new TestRestTemplate();
+	}
+
+	@Test
+	public void testAddShopLocation() throws Exception {
+		URL base = new URL("http://localhost:" + port + "/addShopLocation/kendua main road/700084/4");
+		
+		ShopLocationITO shopLocationITO = new ShopLocationITO();
+	    ShopLocationITO shopLocationAdded = template.postForObject(base.toString(), shopLocationITO, ShopLocationITO.class);
+	    assertThat(shopLocationAdded.getShopId(),equalTo(4L));
+	    assertThat(shopLocationAdded.getLatitude(),equalTo(22.472533));
+	    assertThat(shopLocationAdded.getLongitude(),equalTo(88.3810449));
+	}
+	
+	@Test
+	public void testLocateNearestShopLocation() throws Exception {
+		URL url1 = new URL("http://localhost:" + port + "/addShopLocation/B B Ganguly Street/700012/5");
+		
+		ShopLocationITO shopLocationITO = new ShopLocationITO();
+	    ShopLocationITO shopLocationAdded1 = template.postForObject(url1.toString(), shopLocationITO, ShopLocationITO.class);
+	    
+	    
+	    URL url2 = new URL("http://localhost:" + port + "/addShopLocation/Hill Cart Road/734001/6");
+	    ShopLocationITO shopLocationAdded2 = template.postForObject(url2.toString(), shopLocationITO, ShopLocationITO.class);
+	    
+	    URL url3 = new URL("http://localhost:" + port + "/addShopLocation/Vivekananda Sarani/713305/7");
+	    ShopLocationITO shopLocationAdded3 = template.postForObject(url3.toString(), shopLocationITO, ShopLocationITO.class);
+	    
+	    URL url = new URL("http://localhost:" + port + "/nearestShop/22.569/88.36");
+	    ShopLocationITO returnedShopLocationVO = template.getForObject(url.toString(), ShopLocationITO.class);
+	    
+	    assertThat(returnedShopLocationVO.getShopId(),equalTo(5L));
+	    
+	    
+	}
+}

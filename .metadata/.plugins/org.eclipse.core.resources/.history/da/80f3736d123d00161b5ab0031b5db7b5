@@ -1,0 +1,10 @@
+package org.retailer.gateway.service;
+
+import org.retailer.gateway.to.ShopTO;
+import org.json.simple.parser.ParseException;
+
+public interface GatewayService {
+	public ShopTO saveShop(String shopName, String  shopAddressNumber, String shopAddressPostcode) throws ParseException;
+	
+	
+}

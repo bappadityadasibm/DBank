@@ -1,0 +1,17 @@
+1465540011712	Rename type 'ProductCatalogueService'
+1465540791443	Copy package
+1465543339128	Copy file
+1465554174067	Copy package
+1465572205422	Delete element
+1465572268676	Delete element
+1465572339648	Delete element
+1465572356599	Delete element
+1465572387802	Rename package 'org.sapient.catalogue.dbconfiguration'
+1465572421755	Rename package 'org.sapient.catalogue.repositories'
+1465572438207	Rename type 'ProductRepository'
+1465572462887	Rename package 'org.sapient.catalogue.service'
+1465572480725	Rename type 'ProductService'
+1465572491885	Rename type 'ProductServiceImpl'
+1465578378208	Rename package 'org.sapient.catalogue.backend'
+1465578395970	Rename type 'ProductCatalogueController'
+1465579056919	Delete element

@@ -1,0 +1,45 @@
+package org.retailer.shopmanagement.service;
+
+import org.retailer.shopmanagement.domain.model.Shop;
+import org.retailer.shopmanagement.domain.repo.ShopRepository;
+import org.retailer.shopmanagement.vo.ShopVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@Transactional
+public class ShopServiceImpl implements ShopService{
+	
+	@Autowired
+	private ShopRepository shopRepository;
+	
+	public ShopVO findById(long id)
+	{
+		Shop shop = shopRepository.findOne(id);
+		ShopVO shopVO = new ShopVO();
+		shopVO.setId(shop.getId());
+		shopVO.setName(shop.getName());
+		shopVO.setShopAddressNumber(shop.getShopAddressNumber());
+		shopVO.setShopAddressPostcode(shop.getShopAddressPostcode());
+		return shopVO;
+	
+	}
+	
+	public ShopVO saveShop(String shopName, String  shopAddressNumber, String shopAddressPostcode)
+	{
+		Shop shop = new Shop();
+		shop.setName(shopName);
+		shop.setShopAddressNumber(shopAddressNumber);
+		shop.setShopAddressPostcode(shopAddressPostcode);	
+		shopRepository.save(shop);
+		
+		ShopVO shopVO = new ShopVO();
+		shopVO.setId(shop.getId());
+		shopVO.setName(shop.getName());
+		shopVO.setShopAddressNumber(shop.getShopAddressNumber());
+		shopVO.setShopAddressPostcode(shop.getShopAddressPostcode());
+		return shopVO;
+	}
+	
+}

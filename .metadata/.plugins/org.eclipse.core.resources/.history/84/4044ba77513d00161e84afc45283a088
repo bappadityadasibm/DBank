@@ -1,0 +1,100 @@
+package org.retailer.shoplocator.domain.service.impl;
+
+import java.util.Iterator;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.retailer.helper.*;
+import org.retailer.shoplocator.domain.ito.ShopLocationITO;
+import org.retailer.shoplocator.domain.model.ShopLocation;
+import org.retailer.shoplocator.domain.repo.ShopLocationRepoImpl;
+import org.retailer.shoplocator.domain.service.ShopLocationService;
+
+
+@Service
+@Transactional
+public class ShopLocationServiceImpl implements ShopLocationService{
+	
+	@Autowired
+	private ShopLocationRepoImpl shopLocationRepoImpl;
+	
+	public ShopLocationITO findNearestShop(String latitude, String longitude)
+	{
+		System.out.println("input latitude="+latitude);
+		System.out.println("input longitude="+longitude);
+		double inputLatitude = Double.parseDouble(latitude);
+		double inputLongitude = Double.parseDouble(longitude);
+		System.out.println("converted input latitude="+latitude);
+		System.out.println("converted input longitude="+longitude);
+		double minimumDistance = -1;
+		ShopLocation nearestShopLocation = null;
+		ShopLocationITO nearestShopLocationVO = null;
+		Iterator<ShopLocation> shopAddressIter = shopLocationRepoImpl.findAll().iterator();
+		while(shopAddressIter.hasNext())
+		{
+			System.out.println("Iterating inside findNearestShop()");
+			ShopLocation shopLocation = shopAddressIter.next();
+			System.out.println("Verify Iterated Shop Location latitude="+shopLocation.getLatitude());
+			System.out.println("Verify Iterated Shop Location longitude="+shopLocation.getLongitude());
+			double distance = DistanceCalculator.distance(inputLatitude, inputLongitude, shopLocation.getLatitude(), shopLocation.getLongitude());
+			System.out.println("calculated distance="+distance);
+			if(distance <=minimumDistance || minimumDistance < 0)
+			{				
+				minimumDistance = distance;
+				nearestShopLocation = shopLocation;
+				System.out.println("Found new near shop location with id="+nearestShopLocation.getShopId());
+			}
+			
+			
+		}
+		if(nearestShopLocation != null)
+		{
+			System.out.println("nearest shop Id="+nearestShopLocation.getShopId());
+			nearestShopLocationVO = new ShopLocationITO();
+			nearestShopLocationVO.setId(nearestShopLocation.getId());
+			nearestShopLocationVO.setShopId(nearestShopLocation.getShopId());
+			nearestShopLocationVO.setLatitude(nearestShopLocation.getLatitude());
+			nearestShopLocationVO.setLongitude(nearestShopLocation.getLongitude());
+		}
+		return nearestShopLocationVO;
+	}
+	
+	public ShopLocationITO createShopLocation(String shopAddressNumber,String shopAddressPostcode, long shopId) throws Exception
+	{
+		StringBuilder combinedAddress = new StringBuilder();
+		combinedAddress.append(shopAddressNumber);
+		combinedAddress.append(" ");
+		combinedAddress.append(shopAddressPostcode);
+		Location location = null;
+		try
+		{
+			location = LocationHelper.getLatLongPositions(combinedAddress.toString());
+		}
+		catch(Exception ex)
+		{
+			throw new Exception("Longitude and Latitude not found for the address.");
+		}
+			
+		ShopLocation shopLocation = null;
+		ShopLocationITO shopLocationITO = null;
+		if(location != null)
+		{
+			shopLocation = new ShopLocation();
+			shopLocation.setShopId(shopId);
+			shopLocation.setLatitude(location.getLatitude());
+			shopLocation.setLongitude(location.getLongitude());
+			shopLocationRepoImpl.save(shopLocation);
+			
+			shopLocationITO = new ShopLocationITO();
+			shopLocationITO.setId(shopLocation.getId());
+			shopLocationITO.setShopId(shopLocation.getShopId());
+			shopLocationITO.setLatitude(shopLocation.getLatitude());
+			shopLocationITO.setLongitude(shopLocation.getLongitude());
+		}
+		
+		return shopLocationITO;
+	}
+	
+}

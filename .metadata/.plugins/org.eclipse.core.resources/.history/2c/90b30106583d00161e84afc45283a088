@@ -1,0 +1,68 @@
+package org.retailer.gateway.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.retailer.gateway.service.GatewayService;
+import org.retailer.gateway.to.ShopLocationTO;
+import org.retailer.gateway.to.ShopResponseTO;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+@RestController
+public class APIGatewayController {
+
+	
+	@Autowired
+    private GatewayService gatewayService;
+
+	
+	@RequestMapping(method=RequestMethod.POST, value = "/shops/{shopName}/{shopAddressNumber}/{shopAddressPostcode}")
+	public ShopResponseTO addShop(@PathVariable String shopName, @PathVariable String shopAddressNumber,@PathVariable String shopAddressPostcode) throws Exception{
+		System.out.println("HERE2!!!!!!");	
+		ShopResponseTO shopResponseTO = null;
+		try
+		{
+			shopResponseTO = gatewayService.saveShop(shopName,shopAddressNumber,shopAddressPostcode);
+		}
+		catch(Exception ex)
+		{
+			throw new Exception(ex.getMessage());
+		}
+		
+		return shopResponseTO;
+	}
+	
+	
+	@RequestMapping(value = "/locateShop/{latitude}/{longitude}")
+	public ShopResponseTO findNearestShop(@PathVariable String latitude, @PathVariable String longitude) throws Exception
+	{
+		System.out.println("HERE3!!!!!!");	
+		System.out.println("Gateway input longitude:"+longitude);
+		ShopResponseTO shopResponseTO = null;
+		try
+		{
+			shopResponseTO = gatewayService.findNearestShopLocation(latitude,longitude);
+		}
+		catch(Exception ex)
+		{
+			throw new Exception(ex.getMessage());
+		}
+		
+		return shopResponseTO;
+	}
+}

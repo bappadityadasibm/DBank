@@ -1,0 +1,9 @@
+package org.retailer.shopmanagement.service;
+
+import org.retailer.gateway.entities.Shop;
+
+public interface ShopService {
+	public Shop saveShop(String shopName, String  shopAddressNumber, String shopAddressPostcode);
+	public Shop findById(long id);
+	
+}

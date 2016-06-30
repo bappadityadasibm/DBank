@@ -1,0 +1,6 @@
+package org.retailer.shopmanagement.service;
+
+public interface ShopCreationService {
+	public Shop saveShop(String shopName, String  shopAddressNumber, String shopAddressPostcode);
+	
+}

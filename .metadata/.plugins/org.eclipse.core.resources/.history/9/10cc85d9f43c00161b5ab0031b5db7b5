@@ -1,0 +1,5 @@
+package org.retailer.gateway.to;
+
+public class ShopTO {
+
+}

@@ -1,0 +1,14 @@
+package org.sapient.catalogue.service;
+
+import java.util.List;
+
+import org.sapient.catalogue.entities.Product;
+
+public interface ProductService {
+	public Product findById(long id);
+	public List<Product> findByType(String type);
+	public Product findByName(String name);
+	public void saveProduct(Product product);
+	public void deleteProduct(long id);
+	
+}

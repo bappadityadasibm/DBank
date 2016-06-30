@@ -1,0 +1,12 @@
+package org.retailer.shoplocator.service;
+
+import java.util.List;
+
+import org.retailer.shoplocator.entities.Shop;
+
+public interface ShopLocatorService {
+	public Shop getShop(long id);	
+	public void saveShop(Shop shop);
+	public void deleteShop(long id);
+	
+}

@@ -1,0 +1,9 @@
+package org.retailer.shopmanagement.service;
+
+import java.util.List;
+
+import org.retailer.shopmanagement.entities.Shop;
+
+public interface ShopLocatorService {
+	public double findNearestShop(double latitude, double longitude);
+}

@@ -1,0 +1,41 @@
+package org.retailer.shopmanagement.service;
+
+import java.util.Iterator;
+import java.util.List;
+
+import org.retailer.shopmanagement.entities.Shop;
+import org.retailer.shopmanagement.repositories.ShopRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.retailer.helper.*;
+
+@Service
+@Transactional
+public class ShopLocatorServiceImpl implements ShopLocatorService{
+	
+	@Autowired
+	private ShopRepository shopRepository;
+	public long findNearestShop(double latitude, double longitude)
+	{
+		double minimumDistance = -1;
+		long nearestShopId = 0;
+		Iterator<Shop> shopIter = shopRepository.findAll().iterator();
+		while(shopIter.hasNext())
+		{
+			System.out.println("HJHJHJ");
+			Shop shop = shopIter.next();
+			double distance = DistanceCalculator.distance(latitude, longitude, shop.getLatitude(), shop.getLongitude());
+			if(distance <=minimumDistance || minimumDistance < 0)
+			{
+				minimumDistance = distance;
+				nearestShopId = shop.getId();
+			}
+			
+			
+		}
+		System.out.println("nearest shop Id="+nearestShopId);
+		return nearestShopId;
+	}
+	
+}

@@ -1,0 +1,73 @@
+package org.retailer.shopmanagement.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.retailer.shopmanagement.controller.to.ShopTO;
+import org.retailer.shopmanagement.domain.model.Shop;
+import org.retailer.shopmanagement.domain.service.ShopService;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+/**
+ * Spring Controller which acts as the entry point for Shop Management Micro Service. 
+ * @author Bappadity Das
+ *
+ */
+
+@RestController
+public class ShopController {
+
+	
+	@Autowired
+    private ShopService shopService;
+
+	/**
+	 * Controller method to find a Shop, given its id.
+	 * @param id
+	 * @return ShopTO
+	 */
+	@RequestMapping(value = "/find/{id}")
+	public ShopTO getShop(@PathVariable long id) {
+		ShopITO shopITO = shopService.findById(id);
+		
+		ShopTO shopTO = new ShopTO();
+		shopTO.setId(shopITO.getId());
+		shopTO.setName(shopITO.getName());
+		shopTO.setShopAddressNumber(shopITO.getShopAddressNumber());
+		shopTO.setShopAddressPostcode(shopITO.getShopAddressPostcode());
+		return shopTO;
+	}
+
+	/**
+	 * Controller method to add a new Shop
+	 * @param shopITO
+	 * @return ShopTO
+	 * @throws Exception
+	 */
+	@RequestMapping(method=RequestMethod.POST, value = "/add")
+	public ShopTO addShop(@RequestBody ShopITO shopITO) throws Exception{
+		System.out.println("HERE!!!!!!");	
+		ShopITO addedShop = shopService.saveShop(shopITO.getName(),shopITO.getShopAddressNumber(),shopITO.getShopAddressPostcode());
+		
+		ShopTO shopTO = new ShopTO();
+		shopTO.setId(addedShop.getId());
+		shopTO.setName(addedShop.getName());
+		shopTO.setShopAddressNumber(addedShop.getShopAddressNumber());
+		shopTO.setShopAddressPostcode(addedShop.getShopAddressPostcode());
+		return shopTO;
+	}
+	
+}

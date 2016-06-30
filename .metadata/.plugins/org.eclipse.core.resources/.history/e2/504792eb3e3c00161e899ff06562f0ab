@@ -1,0 +1,35 @@
+package org.sapient.pricing.service;
+
+import java.util.List;
+
+import org.retailer.shopmanagement.entities.Pricing;
+import org.retailer.shopmanagement.repositories.PricingRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@Transactional
+public class PricingServiceImpl implements PricingService{
+	
+	@Autowired
+	private PricingRepository pricingRepository;
+	
+	public Pricing findById(long id)
+	{
+		return pricingRepository.findOne(id);
+	}
+	public Pricing findByProductId(long productId)
+	{
+		return pricingRepository.findByProductId(productId);
+	}
+	public void savePricing(Pricing pricing)
+	{
+		pricingRepository.save(pricing);
+	}
+	public void deletePricing(long id)
+	{
+		pricingRepository.delete(id);
+	}
+	
+}

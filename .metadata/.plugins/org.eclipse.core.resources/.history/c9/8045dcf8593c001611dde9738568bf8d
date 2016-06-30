@@ -1,0 +1,69 @@
+package org.retailer.helper;
+
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+ 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+ 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.lang.StringUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+
+
+public class LocationHelper {
+	
+	private static final String GEOCODE_REQUEST_URL = "http://maps.googleapis.com/maps/api/geocode/xml?sensor=false&";
+    private static HttpClient httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
+
+	public static Location getLatLongPositions(String address) throws Exception
+	  {
+	    int responseCode = 0;
+	    String api = "http://maps.googleapis.com/maps/api/geocode/xml?address=" + URLEncoder.encode(address.replace(' ', '+'), "UTF-8") + "&sensor=true";
+	    URL url = new URL(api);
+	    HttpURLConnection httpConnection = (HttpURLConnection)url.openConnection();
+	    httpConnection.connect();
+	    responseCode = httpConnection.getResponseCode();
+	    if(responseCode == 200)
+	    {
+	      DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();;
+	      Document document = builder.parse(httpConnection.getInputStream());
+	      XPathFactory xPathfactory = XPathFactory.newInstance();
+	      XPath xpath = xPathfactory.newXPath();
+	      XPathExpression expr = xpath.compile("/GeocodeResponse/status");
+	      String status = (String)expr.evaluate(document, XPathConstants.STRING);
+	      if(status.equals("OK"))
+	      {
+	    	 Location location = new Location();
+	         expr = xpath.compile("//geometry/location/lat");
+	         String latitude = (String)expr.evaluate(document, XPathConstants.STRING);
+	         expr = xpath.compile("//geometry/location/lng");
+	         String longitude = (String)expr.evaluate(document, XPathConstants.STRING);
+	         location.setLatitude(Double.parseDouble(latitude));
+	         location.setLongitude(Double.parseDouble(longitude));
+	         return location;
+	      }
+	      else
+	      {
+	         throw new Exception("Error from the API - response status: "+status);
+	      }
+	    }
+	    return null;
+	  }
+
+}

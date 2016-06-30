@@ -1,0 +1,8 @@
+package org.retailer.shoplocator.service;
+
+import org.retailer.shoplocator.entities.ShopLocation;
+
+public interface ShopLocationService {
+	public ShopLocation findNearestShop(double latitude, double longitude);
+	public ShopLocation createShopLocation(String shopAddressNumber,String shopAddressPostcode, long shopId) throws Exception;
+}

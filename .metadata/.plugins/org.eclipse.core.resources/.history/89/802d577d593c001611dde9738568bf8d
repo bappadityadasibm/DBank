@@ -1,0 +1,94 @@
+package org.retailer.shopmanagement.backend;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.retailer.helper.Location;
+import org.retailer.helper.LocationHelper;
+import org.retailer.shopmanagement.entities.Shop;
+import org.retailer.shopmanagement.service.ShopCreationService;
+import org.retailer.shopmanagement.service.ShopLocatorService;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+@RestController
+@RequestMapping(value = "/prices")
+public class ShopController {
+
+	
+	@Autowired
+    private ShopCreationService shopCreationService;
+	private ShopLocatorService shopLocatorService;
+
+
+	/*@RequestMapping(value = "/{id}")
+	public Shop getPricing(@PathVariable int id) {
+		Shop shop = shopCreationService.findById(id);
+		return shop;
+	}*/
+
+	
+	@RequestMapping(value = "/shops/{shopname}/{shopaddressnumber}/{shopaddresspostcode}")
+	public Shop addPricing(@PathVariable String shopName, @PathVariable String shopAddressNumber,@PathVariable String shopAddressPostcode) {
+		Shop shop = new Shop();
+		shop.setName(shopName);
+		shop.setShopAddressNumber(shopAddressNumber);
+		shop.setShopAddressPostcode(shopAddressPostcode);
+		StringBuilder combinedAddress = new StringBuilder();
+		combinedAddress.append(shopAddressNumber);
+		combinedAddress.append(" ");
+		combinedAddress.append(shopAddressPostcode);
+		try
+		{
+			Location location = LocationHelper.getLatLongPositions(combinedAddress.toString());
+			shop.setLatitude(location.getLatitude());
+			shop.setLongitude(location.getLongitude());
+		}
+		catch(Exception ex)
+		{
+			shop.setLatitude(-1);
+			shop.setLongitude(-1);
+		}
+		
+				
+		shopCreationService.saveShop(shop);
+		return shop;
+	}
+	/*@RequestMapping(value = "/delete/{id}")
+	public void deletePricing(@PathVariable long id) {
+		Shop shop = new Shop();
+		shop.setId(id);
+		shopCreationService.deletePricing(id);
+	}*/
+	
+	@RequestMapping(value = "/search/productname/{productname}")
+	public Shop getByProductName(@PathVariable String productname) throws Exception{
+		final String uri = "http://localhost:8082/products/search/name/{name}";
+	     
+	    Map<String, String> params = new HashMap<String, String>();
+	    params.put("name", productname);
+	     
+	    RestTemplate restTemplate = new RestTemplate();
+	    String resultFromProductMicroService = restTemplate.getForObject(uri, String.class, params);
+	    JSONObject json = (JSONObject)new JSONParser().parse(resultFromProductMicroService);
+	    Long productId = (Long)json.get("id");
+	    System.out.println("fetched product id="+productId);
+
+	    Shop shop = shopCreationService.findByProductId(productId);
+		return shop;
+	}
+}
